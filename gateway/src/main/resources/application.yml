@@ -1,0 +1,74 @@
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: inventory
+          uri: http://localhost:8081
+          predicates:
+            - Path=/inventories/**, 
+        - id: inbound
+          uri: http://localhost:8082
+          predicates:
+            - Path=/inbounds/**, 
+        - id: outbound
+          uri: http://localhost:8083
+          predicates:
+            - Path=/outbounds/**, 
+        - id: frontend
+          uri: http://localhost:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: inventory
+          uri: http://inventory:8080
+          predicates:
+            - Path=/inventories/**, 
+        - id: inbound
+          uri: http://inbound:8080
+          predicates:
+            - Path=/inbounds/**, 
+        - id: outbound
+          uri: http://outbound:8080
+          predicates:
+            - Path=/outbounds/**, 
+        - id: frontend
+          uri: http://frontend:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
